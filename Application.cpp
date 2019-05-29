@@ -140,7 +140,7 @@ int main(void)
     };
 
     // Dark blue background
-    // glClearColor(0.0f, 0.0f, 0.4f, 0.0f);
+    glClearColor(0.0f, 0.0f, 0.4f, 0.0f);
 
     // UGH I forgot all about this. On MacOS you have to create the VAO or it doesn't work
     unsigned int vao;
