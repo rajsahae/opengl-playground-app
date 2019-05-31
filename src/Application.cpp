@@ -7,60 +7,9 @@
 #include <fstream>
 #include <sstream>
 
-#define ASSERT(x) if (!(x)) assert(false)
-
-#define GLCall(x) \
-        GLClearError(); \
-        x; \
-        ASSERT(GLLogCall(#x))
-
-static void GLClearError() {
-    while (glGetError() != GL_NO_ERROR);
-}
-
-static bool GLLogCall(const char* function) {
-    while( GLenum error = glGetError() )
-    {
-        std::string msg;
-
-        switch(error)
-        {
-            case GL_NO_ERROR:
-                return true;
-            case GL_INVALID_ENUM:
-                msg = "GL_INVALID_ENUM: An unacceptable value is specified for an enumerated argument";
-                break;
-            case GL_INVALID_VALUE:
-                msg = "GL_INVALID_VALUE: A numeric argument is out of range";
-                break;
-            case GL_INVALID_OPERATION:
-                msg = "GL_INVALID_OPERATION: The specified operation is not allowed in the current state";
-                break;
-            case GL_INVALID_FRAMEBUFFER_OPERATION:
-                msg = "GL_INVALID_FRAMEBUFFER_OPERATION: The framebuffer object is not complete";
-                break;
-            case GL_OUT_OF_MEMORY:
-                msg = "GL_OUT_OF_MEMORY: There is not enough memory left to execute the command";
-                break;
-            case GL_STACK_UNDERFLOW:
-                msg = "GL_STACK_UNDERFLOW: An attempt has been made to perform an operation that would cause an internal stack to underflow.";
-                break;
-            case GL_STACK_OVERFLOW:
-                msg = "GL_STACK_OVERFLOW: An attempt has been made to perform an operation that would cause an internal stack to overflow.";
-                break;
-            default:
-                msg = "An unknown error was encountered";
-                break;
-        }
-
-        std::cout << "[OpenGL Error] (" << error << ")" << std::endl
-                  << "\t" << msg << std::endl
-                  << "\t" << "Function: " << function << std::endl;
-
-        return false;
-    }
-    return true;
-}
+#include "Renderer.h"
+#include "VertexBuffer.h"
+#include "IndexBuffer.h"
 
 struct ShaderSource {
     std::string VertexSource;
@@ -175,6 +124,7 @@ int main(void)
         return 2;
     }
     glfwMakeContextCurrent(window);
+    glfwSwapInterval(1); // sync buffer swap with screen updates
 
     // Initialize GLEW
     glewExperimental = true; // Needed for core profile
@@ -188,14 +138,14 @@ int main(void)
     printf("GLEW Version: %s\n", glewGetString(GLEW_VERSION));
     printf("GL Version: %s\n", glGetString(GL_VERSION));
 
-    float positions[] = {
+    const float positions[] = {
         -0.5f, -0.5f, // 0
          0.5f, -0.5f, // 1
          0.5f,  0.5f, // 2
         -0.5f,  0.5f, // 3
     };
 
-    unsigned int indices[] = {
+    const unsigned int indices[] = {
         0, 1, 2,
         2, 3, 0
     };
@@ -208,20 +158,17 @@ int main(void)
     GLCall(glGenVertexArrays(1, &vao));
     GLCall(glBindVertexArray(vao));
 
-    unsigned int buffer;
-    GLCall(glGenBuffers(1, &buffer));
-    GLCall(glBindBuffer(GL_ARRAY_BUFFER, buffer));
-    GLCall(glBufferData(GL_ARRAY_BUFFER, 4 * 2 * sizeof(float), positions, GL_STATIC_DRAW));
+    // Vertex Buffer
+    VertexBuffer vb(positions, 4 * 2 * sizeof(float));
+    IndexBuffer ib(indices, 6);
+
+    vb.Bind();
+    ib.Bind();
 
     // define vertex layout
     GLCall(glEnableVertexAttribArray(0));
     GLCall(glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(float), 0));
 
-    // index buffer
-    unsigned int ibo;
-    GLCall(glGenBuffers(1, &ibo));
-    GLCall(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo));
-    GLCall(glBufferData(GL_ELEMENT_ARRAY_BUFFER, 6 * 2 * sizeof(unsigned int), indices, GL_STATIC_DRAW));
 
     ShaderSource shaderSource = ParseShader("res/shaders/Basic.shader");
     std::cout << "Vertex shader:" << std::endl << shaderSource.VertexSource << std::endl;
@@ -230,14 +177,43 @@ int main(void)
     unsigned int shader = CreateShader(shaderSource.VertexSource, shaderSource.FragmentSource);
     GLCall(glUseProgram(shader));
 
+    // Uniforms are set per draw, attributes are per vertex
+    GLCall(int colorLocation = glGetUniformLocation(shader, "u_Color"));
+    assert(colorLocation != GL_INVALID_VALUE);
+    assert(colorLocation != GL_INVALID_OPERATION);
+    assert(colorLocation != -1);
+
+    float r = 0.3f;
+    float increment = 0.05f;
+
+    // Clear bindings
+    GLCall(glBindVertexArray(0));
+    GLCall(glUseProgram(0));
+    GLCall(glBindBuffer(GL_ARRAY_BUFFER, 0));
+    GLCall(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0));
+
     /* Loop until the user closes the window */
     while (!glfwWindowShouldClose(window))
     {
         /* Render here */
         GLCall(glClear(GL_COLOR_BUFFER_BIT));
 
+        // Rebind
+        GLCall(glUseProgram(shader));
+        GLCall(glUniform4f(colorLocation, r, 0.3f, 0.8f, 1.0f));
+
+        GLCall(glBindVertexArray(vao));
+        ib.Bind();
+
         /* draw a triangle with modern opengl */
-        GLCall( glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, NULL) );
+        GLCall( glDrawElements(GL_TRIANGLES, ib.GetCount(), GL_UNSIGNED_INT, NULL) );
+
+        if (r > 1.0f)
+            increment = -0.05f;
+        if (r < 0.0f)
+            increment = 0.05f;
+
+        r += increment;
 
         /* Swap front and back buffers */
         glfwSwapBuffers(window);

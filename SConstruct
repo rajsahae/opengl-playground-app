@@ -1,15 +1,14 @@
-env = Environment(CPPPATH = ['.'], CXXFLAGS = ["-std=c++11"])
+env = Environment(CPPPATH = ['include'], CXXFLAGS = ["-std=c++11"])
 
-Repository('glfw-3.3/include')
-Repository('glew-2.1.0/include')
+Repository('vendor/glew')
+Repository('vendor/glfw')
 
-env.Program('app', 'Application.cpp', LIBS=['glfw3', 'GLEW'], LIBPATH=['glfw-3.3/src', 'glew-2.1.0/lib'])
+env.Program('app',
+            Glob('src/*.cpp'),
+            LIBS=['glfw3', 'GLEW'],
+            LIBPATH=['lib'])
 
-env.Append(LINKFLAGS=['-framework'])
-env.Append(LINKFLAGS=['Cocoa'])
-env.Append(LINKFLAGS=['-framework'])
-env.Append(LINKFLAGS=['OpenGL'])
-env.Append(LINKFLAGS=['-framework'])
-env.Append(LINKFLAGS=['IOKit'])
-env.Append(LINKFLAGS=['-framework'])
-env.Append(LINKFLAGS=['CoreVideo'])
+env.Append(LINKFLAGS=['-framework', 'Cocoa',
+                      '-framework', 'OpenGL',
+                      '-framework', 'IOKit',
+                      '-framework', 'CoreVideo'])
