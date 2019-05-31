@@ -8,7 +8,9 @@
 #include <sstream>
 
 #include "Renderer.h"
+#include "VertexArray.h"
 #include "VertexBuffer.h"
+#include "VertexBufferLayout.h"
 #include "IndexBuffer.h"
 
 struct ShaderSource {
@@ -153,22 +155,13 @@ int main(void)
     // Dark blue background
     GLCall(glClearColor(0.0f, 0.0f, 0.0f, 0.0f));
 
-    // UGH I forgot all about this. On MacOS you have to create the VAO or it doesn't work
-    unsigned int vao;
-    GLCall(glGenVertexArrays(1, &vao));
-    GLCall(glBindVertexArray(vao));
-
-    // Vertex Buffer
+    VertexArray va;
     VertexBuffer vb(positions, 4 * 2 * sizeof(float));
+    VertexBufferLayout layout;
+    layout.AddFloat(2);
+    va.AddBuffer(vb, layout);
+
     IndexBuffer ib(indices, 6);
-
-    vb.Bind();
-    ib.Bind();
-
-    // define vertex layout
-    GLCall(glEnableVertexAttribArray(0));
-    GLCall(glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(float), 0));
-
 
     ShaderSource shaderSource = ParseShader("res/shaders/Basic.shader");
     std::cout << "Vertex shader:" << std::endl << shaderSource.VertexSource << std::endl;
@@ -187,7 +180,6 @@ int main(void)
     float increment = 0.05f;
 
     // Clear bindings
-    GLCall(glBindVertexArray(0));
     GLCall(glUseProgram(0));
     GLCall(glBindBuffer(GL_ARRAY_BUFFER, 0));
     GLCall(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0));
@@ -202,7 +194,7 @@ int main(void)
         GLCall(glUseProgram(shader));
         GLCall(glUniform4f(colorLocation, r, 0.3f, 0.8f, 1.0f));
 
-        GLCall(glBindVertexArray(vao));
+        va.Bind();
         ib.Bind();
 
         /* draw a triangle with modern opengl */
