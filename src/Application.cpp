@@ -30,7 +30,7 @@ GLFWwindow* InitWindow()
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
     // Open a window and create its OpenGL context
-    GLFWwindow* window = glfwCreateWindow( 640, 480, "OpenGL Pt2", nullptr, nullptr);
+    GLFWwindow* window = glfwCreateWindow( 960, 540, "OpenGL Pt2", nullptr, nullptr);
     if( window == nullptr ){
         fprintf( stderr, "Failed to open GLFW window. If you have an Intel GPU, they are not 3.3 compatible. Try the 2.1 version of the tutorials.\n" );
         glfwTerminate();
@@ -62,13 +62,13 @@ int main(void)
         return 1;
     }
 
-    glm::mat4 proj = glm::ortho(-2.0f, 2.0f, -1.5f, 1.5f, -1.0f, 1.0f);
+    glm::mat4 proj = glm::ortho(0.0f, 960.0f, 0.0f, 540.0f, -1.0f, 1.0f);
 
     const float positions[] = {
-        -0.5f, -0.5f, 0.0f, 0.0f, // 0
-         0.5f, -0.5f, 1.0f, 0.0f, // 1
-         0.5f,  0.5f, 1.0f, 1.0f, // 2
-        -0.5f,  0.5f, 0.0f, 1.0f // 3
+         100.0f, 100.0f, 0.0f, 0.0f, // 0
+         200.0f, 100.0f, 1.0f, 0.0f, // 1
+         200.0f, 200.0f, 1.0f, 1.0f, // 2
+         100.0f, 200.0f, 0.0f, 1.0f // 3
     };
 
     VertexBuffer vb(positions, 4 * 4 * sizeof(float));
