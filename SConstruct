@@ -1,4 +1,9 @@
 import os
+import multiprocessing
+
+num_cpu = multiprocessing.cpu_count()
+SetOption('num_jobs', num_cpu)
+print("Setting concurrent jobs to %s", num_cpu)
 
 env = Environment(CPPPATH = ['include'], CXXFLAGS = ["-std=c++11"])
 
