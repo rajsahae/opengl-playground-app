@@ -2,11 +2,17 @@ import os
 
 env = Environment(CPPPATH = ['include'], CXXFLAGS = ["-std=c++11"])
 
-for vendor in os.listdir('vendor'):
+include_vendors = ['glew', 'glfw', 'glm', 'stb_image']
+for vendor in include_vendors:
     Repository("vendor/" + vendor)
 
+source_files = []
+source_dirs = ['src/', 'vendor/stb_image/', 'vendor/imgui/']
+for source_dir in source_dirs:
+    source_files.append(Glob(source_dir + '*.cpp'))
+
 env.Program('app',
-            Glob('src/*.cpp'),
+            source_files,
             LIBS=['glfw3', 'GLEW'],
             LIBPATH=['lib'])
 

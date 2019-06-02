@@ -62,7 +62,17 @@ int main(void)
         return 1;
     }
 
+    // Ortho projection matrix, sized for our window
     glm::mat4 proj = glm::ortho(0.0f, 960.0f, 0.0f, 540.0f, -1.0f, 1.0f);
+
+    // Move camera 100 pixels to the left
+    // Create identity matrix, then translate 100 px to the left
+    glm::mat4 view = glm::translate(glm::mat4(1.0f), glm::vec3(-100, 0, 0));
+
+    // Translate the model up and right 200 px
+    glm::mat4 model = glm::translate(glm::mat4(1.0f), glm::vec3(200, 200, 0));
+
+    glm::mat4 mvp = proj * view * model;
 
     const float positions[] = {
          100.0f, 100.0f, 0.0f, 0.0f, // 0
@@ -90,7 +100,7 @@ int main(void)
     Shader shader("res/shaders/OrthoTexture.shader");
     shader.Bind();
     shader.SetUniform1i("u_Texture", 0);
-    shader.SetUniformMat4f("u_MVP", proj);
+    shader.SetUniformMat4f("u_MVP", mvp);
 
     float r = 0.3f;
     float increment = 0.05f;
