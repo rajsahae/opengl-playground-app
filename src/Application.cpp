@@ -99,6 +99,9 @@ int main(void)
     GLCall(glClearColor(0.0f, 0.0f, 0.0f, 0.0f));
 
     // Blending
+    // TODO: After getting the test framework going, might be nice to add a test to play with blending.
+    // Have some color squares that we can move around on top of each other and some selections
+    // to pick the different types of blending?
     GLCall(glEnable(GL_BLEND));
     GLCall(glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA));
 
