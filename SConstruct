@@ -1,8 +1,9 @@
+import os
+
 env = Environment(CPPPATH = ['include'], CXXFLAGS = ["-std=c++11"])
 
-Repository('vendor/glew')
-Repository('vendor/glfw')
-Repository('vendor/stb_image')
+for vendor in os.listdir('vendor'):
+    Repository("vendor/" + vendor)
 
 env.Program('app',
             Glob('src/*.cpp'),

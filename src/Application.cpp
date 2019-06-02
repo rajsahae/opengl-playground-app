@@ -10,6 +10,9 @@
 #include "Shader.h"
 #include "Texture.h"
 
+#include "glm/glm.hpp"
+#include "glm/gtc/matrix_transform.hpp"
+
 GLFWwindow* InitWindow()
 {
     // Initialise GLFW
@@ -27,7 +30,7 @@ GLFWwindow* InitWindow()
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
     // Open a window and create its OpenGL context
-    GLFWwindow* window = glfwCreateWindow( 600, 600, "OpenGL Pt2", nullptr, nullptr);
+    GLFWwindow* window = glfwCreateWindow( 640, 480, "OpenGL Pt2", nullptr, nullptr);
     if( window == nullptr ){
         fprintf( stderr, "Failed to open GLFW window. If you have an Intel GPU, they are not 3.3 compatible. Try the 2.1 version of the tutorials.\n" );
         glfwTerminate();
@@ -59,6 +62,8 @@ int main(void)
         return 1;
     }
 
+    glm::mat4 proj = glm::ortho(-2.0f, 2.0f, -1.5f, 1.5f, -1.0f, 1.0f);
+
     const float positions[] = {
         -0.5f, -0.5f, 0.0f, 0.0f, // 0
          0.5f, -0.5f, 1.0f, 0.0f, // 1
@@ -82,16 +87,19 @@ int main(void)
 
     IndexBuffer ib(indices, 6);
 
-    Shader shader("res/shaders/Texture.shader");
+    Shader shader("res/shaders/OrthoTexture.shader");
+    shader.Bind();
+    shader.SetUniform1i("u_Texture", 0);
+    shader.SetUniformMat4f("u_MVP", proj);
 
     float r = 0.3f;
     float increment = 0.05f;
 
     // Clear bindings
     va.Unbind();
-    shader.Unbind();
     vb.Unbind();
     ib.Unbind();
+    shader.Unbind();
 
     Renderer renderer;
 
@@ -117,7 +125,6 @@ int main(void)
 
         // Uniforms are set per draw, attributes are per vertex
         shader.Bind();
-        shader.SetUniform1i("u_Texture", 0);
 
         /* draw a triangle with modern opengl */
         renderer.Draw(va, ib, shader);
