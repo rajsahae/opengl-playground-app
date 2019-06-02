@@ -34,5 +34,8 @@
 # SCons
 .sconsign.dblite
 
+# ctags
+.tags
+
 # Application
 app
