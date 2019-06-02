@@ -7,9 +7,9 @@ print("Setting concurrent jobs to %s", num_cpu)
 
 env = Environment(CPPPATH = ['include'], CXXFLAGS = ["-std=c++11"])
 
-include_vendors = ['glew', 'glfw', 'glm', 'stb_image']
-for vendor in include_vendors:
-    Repository("vendor/" + vendor)
+for vendor in os.listdir('vendor'):
+    if os.path.isdir('vendor/' + vendor + '/include'):
+      Repository("vendor/" + vendor)
 
 source_files = []
 source_dirs = ['src/', 'vendor/stb_image/', 'vendor/imgui/']
