@@ -5,7 +5,7 @@ num_cpu = multiprocessing.cpu_count()
 SetOption('num_jobs', num_cpu)
 print("Setting concurrent jobs to %s", num_cpu)
 
-env = Environment(CPPPATH = ['include'], CXXFLAGS = ["-std=c++11"])
+env = Environment(CPPPATH = ['include'], CXXFLAGS = ["-std=c++11", "-DIMGUI_IMPL_OPENGL_LOADER_GLEW"])
 
 for vendor in os.listdir('vendor'):
     if os.path.isdir('vendor/' + vendor + '/include'):
