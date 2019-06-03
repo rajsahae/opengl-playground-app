@@ -57,6 +57,8 @@ namespace test
         m_renderer.Clear();
         GLCall(glClearColor(m_ClearColor[0], m_ClearColor[1], m_ClearColor[2], m_ClearColor[3]));
 
+        m_texture.Bind();
+
         {
             glm::mat4 model = glm::translate(glm::mat4(1.0f), m_translationA);
             glm::mat4 mvp = m_proj * m_view * model;
