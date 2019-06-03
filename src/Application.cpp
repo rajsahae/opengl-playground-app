@@ -110,12 +110,14 @@ int main(void)
         {
             currentTest->OnUpdate(0.0f);
             currentTest->OnRender();
-            ImGui::Begin("OpenGL TestMenu");
+            
+            ImGui::Begin(testMenu->GetCurrentTestName().c_str());
             ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
             if (currentTest != testMenu && ImGui::Button("<- Back"))
             {
                 delete currentTest;
                 currentTest = testMenu;
+                testMenu->ResetTestName();
             }
             currentTest->OnImGuiRender();
             ImGui::End();

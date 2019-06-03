@@ -7,14 +7,19 @@ namespace test
     class TestMenu : public Test
     {
         private:
-            std::vector<std::pair<std::string, std::function<Test*()>>> m_Tests;
+            std::string m_TestMenuName = "OpenGL Test Menu";
+            std::string m_CurrentTestName;
             Test*& m_CurrentTest;
+            std::vector<std::pair<std::string, std::function<Test*()>>> m_Tests;
 
         public:
             TestMenu(Test*& currentTest);
 
             void OnRender() override;
             void OnImGuiRender() override;
+
+            std::string inline GetCurrentTestName() const { return m_CurrentTestName; }
+            void inline ResetTestName() { m_CurrentTestName = m_TestMenuName; }
 
             template<typename T>
             void RegisterTest(const std::string& name)

@@ -5,7 +5,11 @@
 
 namespace test
 {
-    TestMenu::TestMenu(Test*& currentTest) : m_CurrentTest(currentTest) {}
+    TestMenu::TestMenu(Test*& currentTest) :
+        m_CurrentTestName(m_TestMenuName),
+        m_CurrentTest(currentTest)
+    {
+    }
 
     void TestMenu::OnRender()
     {
@@ -18,7 +22,10 @@ namespace test
        for (auto testPair : m_Tests)
        {
             if (ImGui::Button(testPair.first.c_str()))
+            {
                 m_CurrentTest = testPair.second();
+                m_CurrentTestName = testPair.first;
+            }
        }
     }
 }
