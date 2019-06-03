@@ -6,17 +6,11 @@
 namespace test
 {
     TestClearColor::TestClearColor()
-        : Test("Test Clear Color"), m_ClearColor { 0.2f, 0.3f, 0.8f, 1.0f }
-    {
-    }
+        : m_ClearColor { 0.2f, 0.3f, 0.8f, 1.0f }
+    { }
 
     TestClearColor::~TestClearColor()
-    {
-    }
-
-    void TestClearColor::OnUpdate(float deltaTime)
-    {
-    }
+    { }
 
     void TestClearColor::OnRender()
     {
@@ -26,9 +20,6 @@ namespace test
 
     void TestClearColor::OnImGuiRender()
     {
-        ImGui::SetNextWindowSize({ 300, 75 }, 0);
-        ImGui::Begin(GetName().c_str());
         ImGui::ColorEdit4("Clear Color", m_ClearColor);
-        ImGui::End();
     }
 };

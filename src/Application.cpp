@@ -7,6 +7,7 @@
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 
+#include "Test.h"
 #include "TestClearColor.h"
 #include "TestTriangle.h"
 #include "TestUniform.h"
@@ -86,9 +87,14 @@ int main(void)
     ImGui_ImplGlfw_InitForOpenGL(window, true);
     ImGui_ImplOpenGL3_Init(glsl_version);
 
-    int currentSelection = -1;
-    int radioSelection = 0;
-    test::Test *test;
+    test::Test *currentTest = nullptr;
+    test::TestMenu *testMenu = new test::TestMenu(currentTest);
+    currentTest = testMenu;
+
+    testMenu->RegisterTest<test::TestClearColor>("Clear Color");
+    testMenu->RegisterTest<test::TestTriangle>("Triangle");
+    testMenu->RegisterTest<test::TestUniform>("Uniform");
+    testMenu->RegisterTest<test::TestMultipleObjects>("2D Textures");
 
     /* Loop until the user closes the window */
     do {
@@ -99,39 +105,20 @@ int main(void)
 
         // build imgui window
         // Use a Begin/End pair to created a named window.
+        if (currentTest)
         {
-            ImGui::Begin("OpenGL Test Window");
+            currentTest->OnUpdate(0.0f);
+            currentTest->OnRender();
+            ImGui::Begin("OpenGL TestMenu");
             ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
-            ImGui::RadioButton("ClearColor",      &radioSelection, 0); ImGui::SameLine();
-            ImGui::RadioButton("Triangle",        &radioSelection, 1); ImGui::SameLine();
-            ImGui::RadioButton("Uniform",         &radioSelection, 2); ImGui::SameLine();
-            ImGui::RadioButton("MultipleObjects", &radioSelection, 3);
+            if (currentTest != testMenu && ImGui::Button("<- Back"))
+            {
+                delete currentTest;
+                currentTest = testMenu;
+            }
+            currentTest->OnImGuiRender();
             ImGui::End();
         }
-
-        if (currentSelection != radioSelection)
-        {
-            switch(radioSelection)
-            {
-                case 0 : delete test;
-                         test = new test::TestClearColor();
-                         break;
-                case 1 : delete test;
-                         test = new test::TestTriangle();
-                         break;
-                case 2 : delete test;
-                         test = new test::TestUniform();
-                         break;
-                case 3 : delete test;
-                         test = new test::TestMultipleObjects();
-                         break;
-            }
-            currentSelection = radioSelection;
-        }
-
-        test->OnUpdate(0.0f);
-        test->OnRender();
-        test->OnImGuiRender();
 
         // imgui draw
         ImGui::Render();

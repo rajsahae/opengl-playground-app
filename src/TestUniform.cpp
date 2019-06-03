@@ -6,7 +6,6 @@
 namespace test
 {
     TestUniform::TestUniform() :
-        Test("Test Uniform"),
         m_ClearColor { 0.8f, 0.3f, 0.2f, 1.0f },
         m_ObjectColor { 0.2f, 0.3f, 0.8f, 1.0f },
         m_Positions {
@@ -73,12 +72,9 @@ namespace test
 
     void TestUniform::OnImGuiRender()
     {
-        ImGui::SetNextWindowSize({ 500, 150 }, 0);
-        ImGui::Begin(GetName().c_str());
         ImGui::ColorEdit4("Clear Color", m_ClearColor);
         ImGui::ColorEdit4("Object Color", m_ObjectColor);
         ImGui::Checkbox("Oscillate Red", &m_Oscillate);
         ImGui::SliderFloat("Red Oscillation Speed", &m_Step, 0.0f, 0.15f);
-        ImGui::End();
     }
 };

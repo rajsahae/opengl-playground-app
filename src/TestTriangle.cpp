@@ -5,9 +5,8 @@
 
 namespace test
 {
-    TestTriangle::TestTriangle() :
-        Test("Test Triangle"),
-        m_ClearColor { 0.8f, 0.3f, 0.2f, 1.0f },
+    TestTriangle::TestTriangle()
+        : m_ClearColor { 0.8f, 0.3f, 0.2f, 1.0f },
         m_Positions {
             -0.5f, -0.5f, // 0
              0.5f, -0.5f, // 1
@@ -27,10 +26,6 @@ namespace test
         m_shader.Unbind();
     }
 
-    void TestTriangle::OnUpdate(float deltaTime)
-    {
-    }
-
     void TestTriangle::OnRender()
     {
         GLCall(glClear(GL_COLOR_BUFFER_BIT));
@@ -45,9 +40,6 @@ namespace test
 
     void TestTriangle::OnImGuiRender()
     {
-        ImGui::SetNextWindowSize({ 300, 75 }, 0);
-        ImGui::Begin(GetName().c_str());
         ImGui::ColorEdit4("Clear Color", m_ClearColor);
-        ImGui::End();
     }
 };

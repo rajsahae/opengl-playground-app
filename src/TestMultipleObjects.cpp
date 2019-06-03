@@ -9,7 +9,6 @@
 namespace test
 {
     TestMultipleObjects::TestMultipleObjects() :
-        Test("Test Multiple Textures"),
         m_ClearColor { 0.8f, 0.3f, 0.2f, 1.0f },
         m_Positions {
             -50.0f, -50.0f, 0.0f, 0.0f, // 0
@@ -78,11 +77,8 @@ namespace test
 
     void TestMultipleObjects::OnImGuiRender()
     {
-        ImGui::SetNextWindowSize({ 425, 150 }, 0);
-        ImGui::Begin(GetName().c_str());
         ImGui::ColorEdit4("Clear Color", m_ClearColor);
         ImGui::SliderFloat3("TranslationA", &m_translationA.x, 0.0f, 960.0f);
         ImGui::SliderFloat3("TranslationB", &m_translationB.x, 0.0f, 960.0f);
-        ImGui::End();
     }
 };
