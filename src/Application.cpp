@@ -71,20 +71,15 @@ int main(void)
     // Ortho projection matrix, sized for our window
     glm::mat4 proj = glm::ortho(0.0f, 960.0f, 0.0f, 540.0f, -1.0f, 1.0f);
 
-    // Move camera 100 pixels to the left
-    // Create identity matrix, then translate 100 px to the left
-    glm::mat4 view = glm::translate(glm::mat4(1.0f), glm::vec3(-100, 0, 0));
-
-    // Translate the model up and right 200 px
-    glm::mat4 model = glm::translate(glm::mat4(1.0f), glm::vec3(200, 200, 0));
-
-    glm::mat4 mvp = proj * view * model;
+    // Move camera 1 unit to the left
+    // Create identity matrix, then translate -1.0 to the left
+    glm::mat4 view = glm::translate(glm::mat4(1.0f), glm::vec3(1, 0, 0));
 
     const float positions[] = {
-         100.0f, 100.0f, 0.0f, 0.0f, // 0
-         200.0f, 100.0f, 1.0f, 0.0f, // 1
-         200.0f, 200.0f, 1.0f, 1.0f, // 2
-         100.0f, 200.0f, 0.0f, 1.0f // 3
+         -50.0f, -50.0f, 0.0f, 0.0f, // 0
+          50.0f, -50.0f, 1.0f, 0.0f, // 1
+          50.0f, 50.0f, 1.0f, 1.0f, // 2
+         -50.0f, 50.0f, 0.0f, 1.0f // 3
     };
 
     VertexBuffer vb(positions, 4 * 4 * sizeof(float));
@@ -106,10 +101,6 @@ int main(void)
     Shader shader("res/shaders/OrthoTexture.shader");
     shader.Bind();
     shader.SetUniform1i("u_Texture", 0);
-    shader.SetUniformMat4f("u_MVP", mvp);
-
-    float r = 0.3f;
-    float increment = 0.05f;
 
     // Clear bindings
     va.Unbind();
@@ -149,6 +140,9 @@ int main(void)
     ImGui_ImplGlfw_InitForOpenGL(window, true);
     ImGui_ImplOpenGL3_Init(glsl_version);
 
+    glm::vec3 translation1(100, 200, 0);
+    glm::vec3 translation2(400, 200, 0);
+
     /* Loop until the user closes the window */
     while (!glfwWindowShouldClose(window))
     {
@@ -161,26 +155,32 @@ int main(void)
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
 
-        // App draw
+        // Bind shader so we can set uniform
         shader.Bind();
-        renderer.Draw(va, ib, shader);
 
-        // Color cycling
-        if (r > 1.0f)
-            increment = -0.05f;
-        if (r < 0.0f)
-            increment = 0.05f;
-        r += increment;
+        // Draw first texture
+        {
+            glm::mat4 model = glm::translate(glm::mat4(1.0f), translation1);
+            glm::mat4 mvp = proj * view * model;
+            shader.SetUniformMat4f("u_MVP", mvp);
+            renderer.Draw(va, ib, shader);
+        }
+
+        // Draw second texture
+        {
+            glm::mat4 model = glm::translate(glm::mat4(1.0f), translation2);
+            glm::mat4 mvp = proj * view * model;
+            shader.SetUniformMat4f("u_MVP", mvp);
+            renderer.Draw(va, ib, shader);
+        }
 
         // build imgui window
-                // 2. Show a simple window that we create ourselves. We use a Begin/End pair to created a named window.
+        // Use a Begin/End pair to created a named window.
         {
-            static float f = 0.0f;
-            static int counter = 0;
-
             ImGui::Begin("OpenGL Test Window");
-            ImGui::SliderFloat("float", &f, 0.0f, 1.0f);            // Edit 1 float using a slider from 0.0f to 1.0f
-            ImGui::ColorEdit3("clear color", (float*)&clear_color); // Edit 3 floats representing a color
+            ImGui::SliderFloat3("Texture-1", &translation1.x, 0.0f, 960.0f);
+            ImGui::SliderFloat3("Texture-2", &translation2.x, 0.0f, 960.0f);
+            ImGui::ColorEdit3("clear color", (float*)&clear_color);
             ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
             ImGui::End();
         }
