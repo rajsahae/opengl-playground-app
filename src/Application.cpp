@@ -7,17 +7,12 @@
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 
-#include "Debug.h"
-#include "Renderer.h"
-#include "VertexArray.h"
-#include "VertexBuffer.h"
-#include "VertexBufferLayout.h"
-#include "IndexBuffer.h"
-#include "Shader.h"
-#include "Texture.h"
+#include "TestClearColor.h"
+#include "TestTriangle.h"
+#include "TestUniform.h"
+#include "TestMultipleObjects.h"
 
-#include "glm/glm.hpp"
-#include "glm/gtc/matrix_transform.hpp"
+#include "Debug.h"
 
 GLFWwindow* InitWindow()
 {
@@ -68,61 +63,12 @@ int main(void)
         return 1;
     }
 
-    // Ortho projection matrix, sized for our window
-    glm::mat4 proj = glm::ortho(0.0f, 960.0f, 0.0f, 540.0f, -1.0f, 1.0f);
-
-    // Move camera 1 unit to the left
-    // Create identity matrix, then translate -1.0 to the left
-    glm::mat4 view = glm::translate(glm::mat4(1.0f), glm::vec3(1, 0, 0));
-
-    const float positions[] = {
-         -50.0f, -50.0f, 0.0f, 0.0f, // 0
-          50.0f, -50.0f, 1.0f, 0.0f, // 1
-          50.0f, 50.0f, 1.0f, 1.0f, // 2
-         -50.0f, 50.0f, 0.0f, 1.0f // 3
-    };
-
-    VertexBuffer vb(positions, 4 * 4 * sizeof(float));
-
-    VertexBufferLayout layout;
-    layout.AddFloat(2);
-    layout.AddFloat(2);
-
-    VertexArray va;
-    va.AddBuffer(vb, layout);
-
-    const unsigned int indices[] = {
-        0, 1, 2,
-        2, 3, 0
-    };
-
-    IndexBuffer ib(indices, 6);
-
-    Shader shader("res/shaders/OrthoTexture.shader");
-    shader.Bind();
-    shader.SetUniform1i("u_Texture", 0);
-
-    // Clear bindings
-    va.Unbind();
-    vb.Unbind();
-    ib.Unbind();
-    shader.Unbind();
-
-    Renderer renderer;
-
-    // Dark blue background
-    glm::vec4 clear_color(0.3f, 0.5f, 0.8f, 0.0f);
-
     // Blending
     // TODO: After getting the test framework going, might be nice to add a test to play with blending.
     // Have some color squares that we can move around on top of each other and some selections
     // to pick the different types of blending?
     GLCall(glEnable(GL_BLEND));
     GLCall(glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA));
-
-    //Texture texture("res/textures/natalie-face.jpg");
-    Texture texture("res/textures/rocket.png");
-    texture.Bind();
 
     // Setup Dear ImGui context
     IMGUI_CHECKVERSION();
@@ -140,50 +86,52 @@ int main(void)
     ImGui_ImplGlfw_InitForOpenGL(window, true);
     ImGui_ImplOpenGL3_Init(glsl_version);
 
-    glm::vec3 translation1(100, 200, 0);
-    glm::vec3 translation2(400, 200, 0);
+    int currentSelection = -1;
+    int radioSelection = 0;
+    test::Test *test;
 
     /* Loop until the user closes the window */
-    while (!glfwWindowShouldClose(window))
-    {
-        /* Render here */
-        GLCall(glClearColor(clear_color[0], clear_color[1], clear_color[2], clear_color[3]));
-        renderer.Clear();
-
+    do {
         // Start the Dear ImGui frame
         ImGui_ImplOpenGL3_NewFrame();
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
 
-        // Bind shader so we can set uniform
-        shader.Bind();
-
-        // Draw first texture
-        {
-            glm::mat4 model = glm::translate(glm::mat4(1.0f), translation1);
-            glm::mat4 mvp = proj * view * model;
-            shader.SetUniformMat4f("u_MVP", mvp);
-            renderer.Draw(va, ib, shader);
-        }
-
-        // Draw second texture
-        {
-            glm::mat4 model = glm::translate(glm::mat4(1.0f), translation2);
-            glm::mat4 mvp = proj * view * model;
-            shader.SetUniformMat4f("u_MVP", mvp);
-            renderer.Draw(va, ib, shader);
-        }
-
         // build imgui window
         // Use a Begin/End pair to created a named window.
         {
             ImGui::Begin("OpenGL Test Window");
-            ImGui::SliderFloat3("Texture-1", &translation1.x, 0.0f, 960.0f);
-            ImGui::SliderFloat3("Texture-2", &translation2.x, 0.0f, 960.0f);
-            ImGui::ColorEdit3("clear color", (float*)&clear_color);
             ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
+            ImGui::RadioButton("ClearColor",      &radioSelection, 0); ImGui::SameLine();
+            ImGui::RadioButton("Triangle",        &radioSelection, 1); ImGui::SameLine();
+            ImGui::RadioButton("Uniform",         &radioSelection, 2); ImGui::SameLine();
+            ImGui::RadioButton("MultipleObjects", &radioSelection, 3);
             ImGui::End();
         }
+
+        if (currentSelection != radioSelection)
+        {
+            switch(radioSelection)
+            {
+                case 0 : delete test;
+                         test = new test::TestClearColor();
+                         break;
+                case 1 : delete test;
+                         test = new test::TestTriangle();
+                         break;
+                case 2 : delete test;
+                         test = new test::TestUniform();
+                         break;
+                case 3 : delete test;
+                         test = new test::TestMultipleObjects();
+                         break;
+            }
+            currentSelection = radioSelection;
+        }
+
+        test->OnUpdate(0.0f);
+        test->OnRender();
+        test->OnImGuiRender();
 
         // imgui draw
         ImGui::Render();
@@ -194,7 +142,8 @@ int main(void)
 
         /* Poll for and process events */
         glfwPollEvents();
-    }
+
+    } while (glfwGetKey(window, GLFW_KEY_ESCAPE ) != GLFW_PRESS && glfwWindowShouldClose(window) == 0 );
 
     // Cleanup
     ImGui_ImplOpenGL3_Shutdown();
@@ -202,5 +151,6 @@ int main(void)
     ImGui::DestroyContext();
 
     glfwTerminate();
+
     return 0;
 }
