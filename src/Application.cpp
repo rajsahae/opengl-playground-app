@@ -8,6 +8,7 @@
 #include <GLFW/glfw3.h>
 
 #include "Test.h"
+#include "TestMenu.h"
 #include "TestClearColor.h"
 #include "TestTriangle.h"
 #include "TestUniform.h"
