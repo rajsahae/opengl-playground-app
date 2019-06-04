@@ -13,6 +13,7 @@
 #include "TestTriangle.h"
 #include "TestUniform.h"
 #include "TestMultipleObjects.h"
+#include "TestBlending.h"
 
 #include "Debug.h"
 
@@ -66,9 +67,6 @@ int main(void)
     }
 
     // Blending
-    // TODO: After getting the test framework going, might be nice to add a test to play with blending.
-    // Have some color squares that we can move around on top of each other and some selections
-    // to pick the different types of blending?
     GLCall(glEnable(GL_BLEND));
     GLCall(glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA));
 
@@ -76,12 +74,9 @@ int main(void)
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
     ImGuiIO& io = ImGui::GetIO(); (void)io;
-    //io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;  // Enable Keyboard Controls
-    //io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;   // Enable Gamepad Controls
 
     // Setup Dear ImGui style
     ImGui::StyleColorsDark();
-    //ImGui::StyleColorsClassic();
 
     // Setup Platform/Renderer bindings
     const char* glsl_version = "#version 330";
@@ -96,6 +91,7 @@ int main(void)
     testMenu->RegisterTest<test::TestTriangle>("Triangle");
     testMenu->RegisterTest<test::TestUniform>("Uniform");
     testMenu->RegisterTest<test::TestMultipleObjects>("2D Textures");
+    testMenu->RegisterTest<test::TestBlending>("Blending");
 
     /* Loop until the user closes the window */
     do {
