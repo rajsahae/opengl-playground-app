@@ -19,13 +19,20 @@ namespace test
 
     void TestMenu::OnImGuiRender()
     {
-       for (auto testPair : m_Tests)
-       {
-            if (ImGui::Button(testPair.first.c_str()))
-            {
-                m_CurrentTest = testPair.second();
-                m_CurrentTestName = testPair.first;
-            }
-       }
+        for (unsigned int i = 0; i < m_Tests.size(); i++)
+        {
+             if (i > 0 && i % 4 != 0)
+                 ImGui::SameLine();
+             else
+                 ImGui::Separator();
+
+             auto testPair = m_Tests.at(i);
+
+             if (ImGui::Button(testPair.first.c_str()))
+             {
+                 m_CurrentTest = testPair.second();
+                 m_CurrentTestName = testPair.first;
+             }
+        }
     }
 }
