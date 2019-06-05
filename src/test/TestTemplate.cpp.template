@@ -1,0 +1,32 @@
+#include "TestTemplate.h"
+#include "imgui.h"
+#include "Debug.h"
+
+namespace test
+{
+    TestTemplate::TestTemplate()
+    {
+
+    }
+
+    TestTemplate::~TestTemplate()
+    {
+
+    }
+
+    void OnUpdate(float deltaTime)
+    {
+    
+    }
+
+    void TestTemplate::OnRender()
+    {
+        GLCall(glClearColor(0.0f, 0.0f, 0.0f, 0.0f));
+        GLCall(glClear(GL_COLOR_BUFFER_BIT));
+    }
+
+    void TestTemplate::OnImGuiRender()
+    {
+
+    }
+}

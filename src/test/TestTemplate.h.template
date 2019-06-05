@@ -1,0 +1,20 @@
+#pragma once
+
+#include <string>
+#include <vector>
+#include <functional>
+#include <iostream>
+
+namespace test
+{
+    class TestTemplate
+    {
+        public:
+            TestTemplate() {}
+            virtual ~TestTemplate() {}
+
+            virtual void OnUpdate(float deltaTime) {}
+            virtual void OnRender() {}
+            virtual void OnImGuiRender() {}
+    };
+}
