@@ -2,6 +2,10 @@
 #include "imgui.h"
 #include "Debug.h"
 
+#include "glm/ext/matrix_transform.hpp" // glm::translate, glm::rotate, glm::scale
+#include "glm/ext/matrix_clip_space.hpp" // glm::perspective
+#include "glm/gtc/constants.hpp" // glm::pi
+
 namespace test
 {
     TestColoredCube::TestColoredCube()
@@ -47,10 +51,10 @@ namespace test
         m_va(),
         m_vb(m_Positions, 3 * 36 * sizeof(float)),
         m_layout(),
-        m_shader("res/shaders/OrthoUniform.shader"),
-        m_camera_pos(glm::vec3(0, 0, 10)),
+        m_shader("res/shaders/Basic.shader"),
+        m_camera_pos(glm::vec3(-3, 3, 4)),
         m_camera_tgt(glm::vec3(0, 0, 0)),
-        m_proj(glm::ortho(-10.0f, 10.0f, -10.0f, 10.0f, -10.0f, 10.0f)),
+        m_proj(glm::perspective(glm::quarter_pi<float>(), 4.0f / 3.0f, 0.1f, 100.0f)),
         m_view(glm::lookAt(m_camera_pos, m_camera_tgt, glm::vec3(0, 1, 0)))
     {
         m_layout.AddFloat(3);

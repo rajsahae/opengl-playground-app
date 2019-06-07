@@ -25,7 +25,7 @@ namespace test
         m_vb(m_Positions, 4 * 2 * sizeof(float)),
         m_ib(m_Indices, 6),
         m_layout(),
-        m_shader("res/shaders/Uniform.shader")
+        m_shader("res/shaders/UniformColor.shader")
     {
 
         m_layout.AddFloat(2);
