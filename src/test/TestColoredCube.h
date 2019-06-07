@@ -28,10 +28,13 @@ namespace test
         private:
             float m_ClearColor[4];
             float m_Positions[108];
+            float m_Colors[108];
 
             VertexArray m_va;
             VertexBuffer m_vb;
+            VertexBuffer m_vb_color;
             VertexBufferLayout m_layout;
+            VertexBufferLayout m_layout_color;
             Shader m_shader;
 
             // MVP
