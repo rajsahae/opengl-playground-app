@@ -4,7 +4,8 @@
 
 namespace test
 {
-    TestTemplate::TestTemplate()
+    TestTemplate::TestTemplate() :
+        m_Renderer()
     {
 
     }
@@ -14,15 +15,14 @@ namespace test
 
     }
 
-    void OnUpdate(float deltaTime)
+    void TestTemplate::OnUpdate(float deltaTime)
     {
     
     }
 
     void TestTemplate::OnRender()
     {
-        GLCall(glClearColor(0.0f, 0.0f, 0.0f, 0.0f));
-        GLCall(glClear(GL_COLOR_BUFFER_BIT));
+        m_Renderer.Clear();
     }
 
     void TestTemplate::OnImGuiRender()

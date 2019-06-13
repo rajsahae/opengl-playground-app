@@ -30,15 +30,13 @@
 *.exe
 *.out
 *.app
+./app
 
 # SCons
 .sconsign.dblite
 
 # ctags
 .tags
-
-# Application
-app
 
 # imgui
 imgui.ini

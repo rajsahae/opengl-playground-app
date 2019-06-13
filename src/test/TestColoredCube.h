@@ -10,6 +10,7 @@
 #include "VertexBuffer.h"
 #include "VertexArray.h"
 #include "Shader.h"
+#include "Renderer.h"
 
 #include "glm/glm.hpp"
 #include "glm/gtc/matrix_transform.hpp"
@@ -36,6 +37,7 @@ namespace test
             VertexBufferLayout m_layout;
             VertexBufferLayout m_layout_color;
             Shader m_shader;
+            Renderer m_renderer;
 
             // MVP
             glm::vec3 m_camera_pos;

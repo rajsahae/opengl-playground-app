@@ -7,13 +7,14 @@
 #include "Test.h"
 #include "Renderer.h"
 
+
 namespace test
 {
-    class TestTemplate : public Test
+    class TestBitmap : public Test
     {
         public:
-            TestTemplate();
-            virtual ~TestTemplate() override;
+            TestBitmap();
+            virtual ~TestBitmap() override;
 
             virtual void OnUpdate(float deltaTime) override;
             virtual void OnRender() override;

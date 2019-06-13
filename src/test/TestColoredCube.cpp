@@ -92,6 +92,7 @@ namespace test
         m_layout(),
         m_layout_color(),
         m_shader("res/shaders/Basic.shader"),
+        m_renderer(),
         m_camera_pos(glm::vec3(4, 3, -3)),
         m_camera_tgt(glm::vec3(0, 0, 0)),
         m_proj(glm::perspective(glm::quarter_pi<float>(), 4.0f / 3.0f, 0.1f, 100.0f)),
@@ -110,17 +111,15 @@ namespace test
 
     void TestColoredCube::OnRender()
     {
-        GLCall(glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT));
-        GLCall(glClearColor(m_ClearColor[0], m_ClearColor[1], m_ClearColor[2], m_ClearColor[3]));
+        m_renderer.Clear(m_ClearColor);
 
         m_view = glm::lookAt(m_camera_pos, m_camera_tgt, glm::vec3(0, 1, 0));
 
-        m_va.Bind();
         m_shader.Bind();
         m_shader.SetUniformMat4f("u_MVP", m_proj * m_view);
 
         // 3 indices starting at 0 -> 1 triangle
-        GLCall( glDrawArrays(GL_TRIANGLES, 0, 36) );
+        m_renderer.Draw(m_va, m_shader, 36);
     }
 
     void TestColoredCube::OnImGuiRender()
