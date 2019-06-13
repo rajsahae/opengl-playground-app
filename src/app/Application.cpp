@@ -15,6 +15,7 @@
 #include "TestMultipleObjects.h"
 #include "TestBlending.h"
 #include "TestColoredCube.h"
+#include "TestBitmap.h"
 
 #include "Debug.h"
 
@@ -99,6 +100,7 @@ int main(void)
     testMenu->RegisterTest<test::TestMultipleObjects>("2D Textures");
     testMenu->RegisterTest<test::TestBlending>("Blending");
     testMenu->RegisterTest<test::TestColoredCube>("Colored Cube");
+    testMenu->RegisterTest<test::TestBitmap>("Textured Cube");
 
     /* Loop until the user closes the window */
     do {
