@@ -110,10 +110,12 @@ namespace test
         GLCall( glBindTexture(GL_TEXTURE_2D, m_TextureID) );
         GLCall( glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, m_BIR.Width(), m_BIR.Height(), 0, GL_RGBA, GL_UNSIGNED_BYTE, m_BIR.Data()) );
 
-        GLCall( glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR) );
+        // When MAGnifying the image (no bigger mipmap available), use LINEAR filtering
         GLCall( glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR) );
-        GLCall( glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE) );
-        GLCall( glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE) );
+        // When MINifying the image, use a LINEAR blend of two mipmaps, each filtered LINEARLY too
+        GLCall( glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR) );
+        // Generate mipmaps, by the way.
+        GLCall( glGenerateMipmap(GL_TEXTURE_2D) );
 
         m_layout.AddFloat(3);
         m_layout_texture.AddFloat(2);
