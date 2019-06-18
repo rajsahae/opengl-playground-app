@@ -112,8 +112,9 @@ namespace test
 
         GLCall( glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR) );
         GLCall( glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR) );
-        // GLCall( glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE) );
-        // GLCall( glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE) );
+        GLCall( glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE) );
+        GLCall( glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE) );
+
         m_layout.AddFloat(3);
         m_layout_texture.AddFloat(2);
         m_va.AddBuffer(m_vb, m_layout);
@@ -133,7 +134,7 @@ namespace test
         m_model = glm::rotate(
                 m_model,
                 deltaTime * m_RotationalVelocity,
-                glm::vec3(0.5, 1, -0.5));
+                glm::vec3(1, 0, 0.5));
     }
 
     void TestBitmap::OnRender()
