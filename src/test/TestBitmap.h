@@ -17,8 +17,9 @@ namespace test
             TestBitmap();
             virtual ~TestBitmap() override;
 
-            virtual void OnRender() override;
-            virtual void OnImGuiRender() override;
+            void OnUpdate(float deltaTime) override;
+            void OnRender() override;
+            void OnImGuiRender() override;
 
         private:
             Renderer m_Renderer;
@@ -28,6 +29,7 @@ namespace test
             float m_ClearColor[4];
             float m_Positions[108];
             float m_TexCoords[108];
+            float m_RotationalVelocity; // radians per sec
 
             VertexArray m_va;
             VertexBuffer m_vb;
@@ -43,5 +45,6 @@ namespace test
 
             glm::mat4 m_proj;
             glm::mat4 m_view;
+            glm::mat4 m_model;
     };
 }

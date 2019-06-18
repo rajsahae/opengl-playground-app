@@ -1,32 +1,33 @@
 
 #include "BMPImageReader.h"
 
-BMPImageReader::BMPImageReader(const std::string filepath) :
+BMPImageReader::BMPImageReader() :
     m_Width(0), m_Height(0), m_ImageSize(0), m_Data(nullptr)
+{
+}
+
+bool BMPImageReader::Load(const std::string filepath)
 {
     unsigned char header[54]; // Each BMP file begins by a 54-bytes header
     unsigned int dataPos;     // Position in the file where the actual data begins
-
-    // Actual RGB data
-    unsigned char * data;
 
     FILE * file = fopen(filepath.c_str(), "rb");
     if (!file)
     {
         printf("Image could not be opened\n");
-        return;
+        return false;
     }
 
     if ( fread(header, 1, 54, file)!=54 )
     { // If not 54 bytes read : problem
         printf("Not a correct BMP file\n");
-        return;
+        return false;
     }
 
     if (header[0] != 'B' || header[1] != 'M')
     { // If first two bytes of header are not BM
         printf("Not a correct BMP header\n");
-        return;
+        return false;
     }
 
     // Read ints from the byte array
@@ -51,6 +52,7 @@ BMPImageReader::BMPImageReader(const std::string filepath) :
     //Everything is in memory now, the file can be closed
     fclose(file);
 
+    return true;
 }
 
 BMPImageReader::~BMPImageReader()

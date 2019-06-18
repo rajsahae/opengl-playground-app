@@ -14,11 +14,13 @@ private:
 
 public:
 
-    BMPImageReader(const std::string filepath);
+    BMPImageReader();
     ~BMPImageReader();
 
-    inline unsigned char* Data() { return m_Data; }
-    inline unsigned int Width() { return m_Width; }
-    inline unsigned int Height() { return m_Height; }
-    inline unsigned int Size() { return m_ImageSize; }
+    bool Load(const std::string filepath);
+
+    inline unsigned char* Data() const { return m_Data; }
+    inline unsigned int Width() const { return m_Width; }
+    inline unsigned int Height() const { return m_Height; }
+    inline unsigned int Size() const { return m_ImageSize; }
 };
