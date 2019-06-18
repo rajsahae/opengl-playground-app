@@ -86,6 +86,7 @@ namespace test
                     0.820f,  0.883f,  0.371f,
                     0.982f,  0.099f,  0.879f
         },
+        m_RotationalVelocity(1.0),
         m_va(),
         m_vb(m_Positions, 3 * 36 * sizeof(float)),
         m_vb_color(m_Colors, 3 * 36 * sizeof(float)),
@@ -96,7 +97,8 @@ namespace test
         m_camera_pos(glm::vec3(4, 3, -3)),
         m_camera_tgt(glm::vec3(0, 0, 0)),
         m_proj(glm::perspective(glm::quarter_pi<float>(), 4.0f / 3.0f, 0.1f, 100.0f)),
-        m_view(glm::lookAt(m_camera_pos, m_camera_tgt, glm::vec3(0, 1, 0)))
+        m_view(glm::lookAt(m_camera_pos, m_camera_tgt, glm::vec3(0, 1, 0))),
+        m_model(glm::mat4(1.0f))
     {
         m_layout.AddFloat(3);
         m_layout_color.AddFloat(3);
@@ -109,6 +111,14 @@ namespace test
         m_shader.Unbind();
     }
 
+    void TestColoredCube::OnUpdate(float deltaTime)
+    {
+        m_model = glm::rotate(
+                m_model,
+                deltaTime * m_RotationalVelocity,
+                glm::vec3(0, 1, 0));
+    }
+
     void TestColoredCube::OnRender()
     {
         m_renderer.Clear(m_ClearColor);
@@ -116,7 +126,7 @@ namespace test
         m_view = glm::lookAt(m_camera_pos, m_camera_tgt, glm::vec3(0, 1, 0));
 
         m_shader.Bind();
-        m_shader.SetUniformMat4f("u_MVP", m_proj * m_view);
+        m_shader.SetUniformMat4f("u_MVP", m_proj * m_view * m_model);
 
         // 3 indices starting at 0 -> 1 triangle
         m_renderer.Draw(m_va, m_shader, 36);
@@ -127,5 +137,6 @@ namespace test
         ImGui::ColorEdit4("Clear Color", m_ClearColor);
         ImGui::SliderFloat3("Camera Pos", &m_camera_pos[0], -20, 20);
         ImGui::SliderFloat3("Camera Tgt", &m_camera_tgt[0], -20, 20);
+        ImGui::SliderFloat("Rot Vel", &m_RotationalVelocity, 0, 7);
     }
 }

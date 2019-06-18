@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <chrono>
 
 #include "imgui.h"
 #include "imgui_impl_glfw.h"
@@ -102,6 +103,9 @@ int main(void)
     testMenu->RegisterTest<test::TestColoredCube>("Colored Cube");
     testMenu->RegisterTest<test::TestBitmap>("Textured Cube");
 
+
+    auto previous_time = std::chrono::steady_clock::now();
+
     /* Loop until the user closes the window */
     do {
         // Start the Dear ImGui frame
@@ -109,11 +113,14 @@ int main(void)
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
 
+        auto current_time = std::chrono::steady_clock::now();
+        std::chrono::duration<float> elapsed_ticks = current_time - previous_time;
+
         // build imgui window
         // Use a Begin/End pair to created a named window.
         if (currentTest)
         {
-            currentTest->OnUpdate(0.0f);
+            currentTest->OnUpdate(elapsed_ticks.count());
             currentTest->OnRender();
             
             ImGui::Begin(testMenu->GetCurrentTestName().c_str());
@@ -127,6 +134,8 @@ int main(void)
             currentTest->OnImGuiRender();
             ImGui::End();
         }
+
+        previous_time = current_time;
 
         // imgui draw
         ImGui::Render();
