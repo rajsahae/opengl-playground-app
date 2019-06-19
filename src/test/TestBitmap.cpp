@@ -7,6 +7,8 @@
 #include "glm/ext/matrix_clip_space.hpp" // glm::perspective
 #include "glm/gtc/constants.hpp" // glm::pi
 
+#include "Controls.h"
+
 namespace test
 {
     TestBitmap::TestBitmap() :
@@ -99,8 +101,6 @@ namespace test
         m_renderer(),
         m_camera_pos(glm::vec3(4, 3, -3)),
         m_camera_tgt(glm::vec3(0, 0, 0)),
-        m_proj(glm::perspective(glm::quarter_pi<float>(), 4.0f / 3.0f, 0.1f, 100.0f)),
-        m_view(glm::lookAt(m_camera_pos, m_camera_tgt, glm::vec3(0, 1, 0))),
         m_model(glm::mat4(1))
     {
         if (!m_BIR.Load("res/textures/marbles.bmp"))
@@ -133,20 +133,22 @@ namespace test
 
     void TestBitmap::OnUpdate(float deltaTime)
     {
+        controls::VP VP = controls::computeMatricesFromInputs(deltaTime);
+
         m_model = glm::rotate(
                 m_model,
                 deltaTime * m_RotationalVelocity,
                 glm::vec3(1, 0, 0.5));
+
+        m_MVP = VP.ProjectionMatrix * VP.ViewMatrix * m_model;
     }
 
     void TestBitmap::OnRender()
     {
         m_renderer.Clear(m_ClearColor);
 
-        m_view = glm::lookAt(m_camera_pos, m_camera_tgt, glm::vec3(0, 1, 0));
-
         m_shader.Bind();
-        m_shader.SetUniformMat4f("u_MVP", m_proj * m_view * m_model);
+        m_shader.SetUniformMat4f("u_MVP", m_MVP);
         m_shader.SetUniform1i("u_Texture", 0);
 
         // 3 indices starting at 0 -> 1 triangle
