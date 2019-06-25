@@ -19,6 +19,7 @@
 #include "TestBitmap.h"
 
 #include "Debug.h"
+#include "Controls.h"
 
 GLFWwindow* InitWindow()
 {
@@ -120,7 +121,9 @@ int main(void)
         // Use a Begin/End pair to created a named window.
         if (currentTest)
         {
-            currentTest->OnUpdate(elapsed_ticks.count());
+            float deltaTime = elapsed_ticks.count();
+            controls::VP VP = controls::computeMatricesFromInputs(deltaTime);
+            currentTest->OnUpdate(deltaTime, VP.ProjectionMatrix * VP.ViewMatrix);
             currentTest->OnRender();
             
             ImGui::Begin(testMenu->GetCurrentTestName().c_str());

@@ -7,8 +7,6 @@
 #include "glm/ext/matrix_clip_space.hpp" // glm::perspective
 #include "glm/gtc/constants.hpp" // glm::pi
 
-#include "Controls.h"
-
 namespace test
 {
     TestBitmap::TestBitmap() :
@@ -131,16 +129,14 @@ namespace test
         m_shader.Unbind();
     }
 
-    void TestBitmap::OnUpdate(float deltaTime)
+    void TestBitmap::OnUpdate(float deltaTime, glm::mat4 VP)
     {
-        controls::VP VP = controls::computeMatricesFromInputs(deltaTime);
-
         m_model = glm::rotate(
                 m_model,
                 deltaTime * m_RotationalVelocity,
                 glm::vec3(1, 0, 0.5));
 
-        m_MVP = VP.ProjectionMatrix * VP.ViewMatrix * m_model;
+        m_MVP = VP * m_model;
     }
 
     void TestBitmap::OnRender()

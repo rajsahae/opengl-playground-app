@@ -38,7 +38,7 @@ namespace test
         m_shader.Unbind();
     }
 
-    void TestUniform::OnUpdate(float deltaTime)
+    void TestUniform::OnUpdate(float deltaTime, glm::mat4 VP)
     {
         // Ideally we would actually specify a "rate" instead of a step, and then we would normalize the points stepped based on the
         // input deltaTime, i.e. if rate = 100 points / sec, or 100 points / 1000 ms, or 0.1 points / ms, then we pass in delta time

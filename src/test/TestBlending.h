@@ -22,7 +22,6 @@ namespace test
             TestBlending();
             ~TestBlending();
 
-            void OnUpdate(float deltaTime) override;
             void OnRender() override;
             void OnImGuiRender() override;
 

@@ -23,7 +23,7 @@ namespace test
             TestColoredCube();
             ~TestColoredCube();
 
-            void OnUpdate(float deltaTime) override;
+            void OnUpdate(float deltaTime, glm::mat4 VP) override;
             void OnRender() override;
             void OnImGuiRender() override;
 
@@ -45,8 +45,7 @@ namespace test
             glm::vec3 m_camera_pos;
             glm::vec3 m_camera_tgt;
 
-            glm::mat4 m_proj;
-            glm::mat4 m_view;
             glm::mat4 m_model;
+            glm::mat4 m_MVP;
     };
 }

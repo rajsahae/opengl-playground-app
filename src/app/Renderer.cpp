@@ -3,7 +3,6 @@
 void Renderer::Clear() const
 {
     GLCall(glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT));
-
 }
 
 void Renderer::Clear(float clearColor[4]) const

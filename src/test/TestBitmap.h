@@ -17,7 +17,7 @@ namespace test
             TestBitmap();
             virtual ~TestBitmap() override;
 
-            void OnUpdate(float deltaTime) override;
+            void OnUpdate(float deltaTime, glm::mat4 VP) override;
             void OnRender() override;
             void OnImGuiRender() override;
 

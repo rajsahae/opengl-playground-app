@@ -47,10 +47,6 @@ namespace test
         m_shader.Unbind();
     }
 
-    void TestBlending::OnUpdate(float deltaTime)
-    {
-    }
-
     void TestBlending::OnRender()
     {
         if (m_EnableBlend)

@@ -47,10 +47,6 @@ namespace test
         m_shader.Unbind();
     }
 
-    void TestMultipleObjects::OnUpdate(float deltaTime)
-    {
-    }
-
     void TestMultipleObjects::OnRender()
     {
         m_renderer.Clear();

@@ -16,7 +16,7 @@ namespace test
             TestUniform();
             ~TestUniform();
 
-            void OnUpdate(float deltaTime) override;
+            void OnUpdate(float deltaTime, glm::mat4 VP) override;
             void OnRender() override;
             void OnImGuiRender() override;
 
