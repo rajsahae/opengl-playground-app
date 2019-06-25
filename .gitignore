@@ -30,7 +30,7 @@
 *.exe
 *.out
 *.app
-./app
+app
 
 # SCons
 .sconsign.dblite
