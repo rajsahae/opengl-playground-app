@@ -1,0 +1,3 @@
+#!/bin/bash
+
+/usr/local/bin/nvim $(find . -name \*.cpp -o -name \*.h -o -name \*.hpp) -c 'b Application.cpp'
