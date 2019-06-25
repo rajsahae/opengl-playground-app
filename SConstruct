@@ -14,7 +14,7 @@ env = Environment(CPPPATH = include_dirs, CXXFLAGS = compile_flags)
 
 Repository("vendor")
 
-env.Program('app',
+env.Program('playground',
             source_files,
             LIBS=['glfw3', 'GLEW'],
             LIBPATH=['lib'])

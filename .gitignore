@@ -27,10 +27,7 @@
 *.lib
 
 # Executables
-*.exe
-*.out
-*.app
-app
+playground
 
 # SCons
 .sconsign.dblite
